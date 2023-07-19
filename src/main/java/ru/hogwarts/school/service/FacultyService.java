@@ -15,6 +15,8 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
 
+import static java.util.Comparator.comparing;
+
 @Service
 @AllArgsConstructor
 public class FacultyService {
@@ -71,5 +73,12 @@ public class FacultyService {
                 .orElseThrow(() -> new FacultyNameNotFoundException(facultyName)).stream()
                 .map(studentMapper::toDto)
                 .toList();
+    }
+
+    public String getTheMostLongerFacultyName() {
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(comparing(String::length))
+                .orElse(null);
     }
 }
