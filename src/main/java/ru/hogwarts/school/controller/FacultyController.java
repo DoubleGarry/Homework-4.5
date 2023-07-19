@@ -1,11 +1,13 @@
 package ru.hogwarts.school.controller;
 
-import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.dto.FacultyDtoIn;
 import ru.hogwarts.school.dto.FacultyDtoOut;
 import ru.hogwarts.school.dto.StudentDtoOut;
 import ru.hogwarts.school.service.FacultyService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -43,5 +45,10 @@ public class FacultyController {
     @GetMapping("/{facultyName}/students")
     public Collection<StudentDtoOut> findAllStudentsOnFaculty(@PathVariable String facultyName) {
         return service.findStudentsByFaculty(facultyName);
+    }
+
+    @GetMapping("/the-most-longer-faculty-name")
+    public ResponseEntity<String> getTheMostLongerFacultyName() {
+        return ResponseEntity.ok(service.getTheMostLongerFacultyName());
     }
 }

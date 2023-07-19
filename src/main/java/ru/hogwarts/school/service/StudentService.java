@@ -1,8 +1,5 @@
 package ru.hogwarts.school.service;
 
-import jakarta.annotation.Nullable;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.hogwarts.school.dto.FacultyDtoOut;
 import ru.hogwarts.school.dto.StudentDtoIn;
 import ru.hogwarts.school.dto.StudentDtoOut;
@@ -16,9 +13,14 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
+import jakarta.annotation.Nullable;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Optional;
+
+import static java.util.Comparator.comparing;
 
 @Service
 @AllArgsConstructor
@@ -105,5 +107,21 @@ public class StudentService {
         return studentRepository.getLastFiveStudents().stream()
                 .map(studentMapper::toDto)
                 .toList();
+    }
+
+    public Collection<StudentDtoOut> findAllStudentsWithNameStartedOnA() {
+        return studentRepository.findAll().stream()
+                .peek(student -> student.setName(student.getName().toUpperCase()))
+                .map(studentMapper::toDto)
+                .filter(studentDtoOut -> studentDtoOut.getName().startsWith("А"))
+                .sorted(comparing(StudentDtoOut::getName))
+                .toList();
+    }
+
+    public Double getAvgAgeViaApp() {
+        return studentRepository.findAll().stream()
+                .mapToDouble(Student::getAge)
+                .average()
+                .orElse(0.0);
     }
 }
